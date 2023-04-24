@@ -50,6 +50,11 @@ const router = createRouter({
       component: () => import("../views/dashboard/ProdukView.vue"),
     },
     {
+      path: "/customer",
+      name: "dashboard.customer",
+      component: () => import("../views/dashboard/CustomerView.vue"),
+    },
+    {
       path: "/user",
       name: "dashboard.user",
       component: () => import("../views/dashboard/UserView.vue"),
@@ -63,6 +68,16 @@ const router = createRouter({
       path: "/transaksi",
       name: "dashboard.transaksi",
       component: () => import("../views/dashboard/TransaksiView.vue"),
+    },
+    {
+      path: "/stok",
+      name: "dashboard.stok",
+      component: () => import("../views/dashboard/StokView.vue"),
+    },
+    {
+      path: "/supplier",
+      name: "dashboard.supplier",
+      component: () => import("../views/dashboard/SupplierView.vue"),
     },
   ],
 });

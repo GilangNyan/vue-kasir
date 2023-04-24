@@ -14,6 +14,7 @@ export default {
         tableConfig: {
             orderBy: "barcode",
             orderDir: "ASC",
+            associatedTable: null,
             totalRows: 0,
             totalPages: 1,
             limit: 10,
@@ -40,12 +41,14 @@ export default {
                     perPage: this.tableConfig.limit,
                     orderBy: this.tableConfig.orderBy,
                     orderDir: this.tableConfig.orderDir,
+                    associatedTable: this.tableConfig.associatedTable,
                     search: this.tableConfig.search
                 }
             }).then((response) => this.setProduk(response.data)).catch((error) => console.log(error.response))
         },
-        orderData(columnName) {
+        orderData(columnName, associatedTable = null) {
             this.tableConfig.orderBy = columnName
+            this.tableConfig.associatedTable = associatedTable
             if(this.tableConfig.orderDir === 'ASC') {
                 this.tableConfig.orderDir = 'DESC'
             } else {
@@ -123,21 +126,41 @@ export default {
                                     <th class="p-3 text-sm font-semibold tracking-wide text-left dark:text-slate-200" rowspan="2">
                                         Nama Produk
                                         <button type="button" @click="orderData('nama')">
-                                            <font-awesome-icon icon="fa-solid fa-arrow-up-short-wide" v-if="tableConfig.orderBy != 'nama'"
+                                            <font-awesome-icon icon="fa-solid fa-arrow-up-short-wide" v-if="tableConfig.orderBy != 'nama' || (tableConfig.orderBy == 'nama' && tableConfig.associatedTable != null)"
                                                 class="text-neutral-400 dark:text-slate-400 hover:text-neutral-500 dark:hover:text-slate-300" />
                                             <font-awesome-icon icon="fa-solid fa-arrow-up-short-wide"
-                                                v-if="tableConfig.orderBy == 'nama' && tableConfig.orderDir == 'DESC'"
+                                                v-if="tableConfig.orderBy == 'nama' && tableConfig.orderDir == 'DESC' && tableConfig.associatedTable == null"
                                                 class="dark:text-slate-200 hover:text-neutral-700 dark:hover:text-slate-100" />
                                             <font-awesome-icon icon="fa-solid fa-arrow-down-short-wide"
-                                                v-if="tableConfig.orderBy == 'nama' && tableConfig.orderDir == 'ASC'"
+                                                v-if="tableConfig.orderBy == 'nama' && tableConfig.orderDir == 'ASC' && tableConfig.associatedTable == null"
                                                 class="dark:text-slate-200 hover:text-neutral-700 dark:hover:text-slate-100" />
                                         </button>
                                     </th>
                                     <th class="p-3 text-sm font-semibold tracking-wide text-center dark:text-slate-200" rowspan="2">
                                         Kategori
+                                        <button type="button" @click="orderData('nama', 'kategori')">
+                                            <font-awesome-icon icon="fa-solid fa-arrow-up-short-wide" v-if="tableConfig.orderBy != 'nama' || (tableConfig.orderBy == 'nama' && tableConfig.associatedTable != 'kategori')"
+                                                class="text-neutral-400 dark:text-slate-400 hover:text-neutral-500 dark:hover:text-slate-300" />
+                                            <font-awesome-icon icon="fa-solid fa-arrow-up-short-wide"
+                                                v-if="tableConfig.orderBy == 'nama' && tableConfig.orderDir == 'DESC' && tableConfig.associatedTable == 'kategori'"
+                                                class="dark:text-slate-200 hover:text-neutral-700 dark:hover:text-slate-100" />
+                                            <font-awesome-icon icon="fa-solid fa-arrow-down-short-wide"
+                                                v-if="tableConfig.orderBy == 'nama' && tableConfig.orderDir == 'ASC' && tableConfig.associatedTable == 'kategori'"
+                                                class="dark:text-slate-200 hover:text-neutral-700 dark:hover:text-slate-100" />
+                                        </button>
                                     </th>
                                     <th class="p-3 text-sm font-semibold tracking-wide text-center dark:text-slate-200" rowspan="2">
                                         Satuan
+                                        <button type="button" @click="orderData('nama', 'satuan')">
+                                            <font-awesome-icon icon="fa-solid fa-arrow-up-short-wide" v-if="tableConfig.orderBy != 'nama' || (tableConfig.orderBy == 'nama' && tableConfig.associatedTable != 'satuan')"
+                                                class="text-neutral-400 dark:text-slate-400 hover:text-neutral-500 dark:hover:text-slate-300" />
+                                            <font-awesome-icon icon="fa-solid fa-arrow-up-short-wide"
+                                                v-if="tableConfig.orderBy == 'nama' && tableConfig.orderDir == 'DESC' && tableConfig.associatedTable == 'satuan'"
+                                                class="dark:text-slate-200 hover:text-neutral-700 dark:hover:text-slate-100" />
+                                            <font-awesome-icon icon="fa-solid fa-arrow-down-short-wide"
+                                                v-if="tableConfig.orderBy == 'nama' && tableConfig.orderDir == 'ASC' && tableConfig.associatedTable == 'satuan'"
+                                                class="dark:text-slate-200 hover:text-neutral-700 dark:hover:text-slate-100" />
+                                        </button>
                                     </th>
                                     <th class="px-3 py-1 text-sm font-semibold tracking-wide text-center dark:text-slate-200" colspan="2">
                                         Harga
@@ -184,8 +207,73 @@ export default {
                         @pagechanged="onPageChange" />
                 </div>
                 <!-- Right Content -->
-                <div class="w-full lg:w-1/3 shadow-lg bg-white dark:bg-slate-800 rounded-2xl p-4 space-y-4">
-                    <!--  -->
+                <div class="w-full lg:w-1/3 space-y-4">
+                    <div class="bg-white dark:bg-slate-800 shadow-lg rounded-2xl overflow-hidden">
+                        <div class="p-4 border-b dark:border-slate-600 flex items-center">
+                            <h2 class="text-lg font-bold text-neutral-700 dark:text-slate-200">{{ editingId != null ? 'Ubah' : 'Tambah'
+                            }} Data Produk
+                            </h2>
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <div class="space-y-2">
+                                <label for="kategori" class="text-neutral-600 dark:text-slate-400">Kategori Produk</label>
+                                <select name="kategori" id="kategori"
+                                    class="w-full border p-2 rounded-lg shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 invalid:text-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500 placeholder:text-neutral-400 dark:placeholder:text-slate-500">
+                                    <option value="1">Kategori</option>
+                                </select>
+                            </div>
+                            <div class="space-y-2">
+                                <label for="barcode" class="text-neutral-600 dark:text-slate-400">Nomor Barcode</label>
+                                <input type="text" id="barcode" required
+                                    class="w-full border p-2 rounded-lg shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 invalid:text-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500 placeholder:text-neutral-400 dark:placeholder:text-slate-500"
+                                    placeholder="cth: 0150004" v-model="editingBarcode">
+                            </div>
+                            <div class="space-y-2">
+                                <label for="nama" class="text-neutral-600 dark:text-slate-400">Nama Produk</label>
+                                <input type="text" id="nama" required
+                                    class="w-full border p-2 rounded-lg shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 invalid:text-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500 placeholder:text-neutral-400 dark:placeholder:text-slate-500"
+                                    placeholder="cth: Buku Gambar" v-model="editingNama">
+                            </div>
+                            <div class="space-y-2">
+                                <label for="satuan" class="text-neutral-600 dark:text-slate-400">Satuan Produk</label>
+                                <select name="satuan" id="satuan"
+                                    class="w-full border p-2 rounded-lg shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 invalid:text-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500 placeholder:text-neutral-400 dark:placeholder:text-slate-500">
+                                    <option value="1">Satuan</option>
+                                </select>
+                            </div>
+                            <div class="space-y-2">
+                                <label for="beli" class="text-neutral-600 dark:text-slate-400">Harga Beli</label>
+                                <input type="number" id="beli" required
+                                    class="w-full border p-2 rounded-lg shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 invalid:text-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500 placeholder:text-neutral-400 dark:placeholder:text-slate-500"
+                                    placeholder="cth: 5000" v-model="editingBeli">
+                            </div>
+                            <div class="space-y-2">
+                                <label for="jual" class="text-neutral-600 dark:text-slate-400">Harga Jual</label>
+                                <input type="number" id="jual" required
+                                    class="w-full border p-2 rounded-lg shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 invalid:text-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500 placeholder:text-neutral-400 dark:placeholder:text-slate-500"
+                                    placeholder="cth: 5500" v-model="editingJual">
+                            </div>
+                            <div class="space-y-2">
+                                <label for="stok" class="text-neutral-600 dark:text-slate-400">Stok Produk</label>
+                                <input type="number" id="stok" required
+                                    class="w-full border p-2 rounded-lg shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 invalid:text-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500 placeholder:text-neutral-400 dark:placeholder:text-slate-500"
+                                    placeholder="cth: 12" v-model="editingStok">
+                            </div>
+                        </div>
+                        <div class="flex px-4 py-2 space-x-1 bg-neutral-100 dark:bg-slate-700">
+                            <button type="button" v-if="editingId != null"
+                                class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg" @click="ubah()">
+                                Ubah Produk
+                            </button>
+                            <button type="button" v-else class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg"
+                                @click="tambah()">
+                                Tambah Produk
+                            </button>
+                            <button type="button" class="bg-red-500 text-white font-semibold px-4 py-2 rounded-lg" @click="reset()">
+                                Reset
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>

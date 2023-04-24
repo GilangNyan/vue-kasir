@@ -227,7 +227,7 @@ export default {
                                 <label for="nama" class="text-neutral-600 dark:text-slate-400">Nama Satuan</label>
                                 <input type="text" id="nama" required
                                     class="w-full border p-2 rounded-lg shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 invalid:text-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500 placeholder:text-neutral-400 dark:placeholder:text-slate-500"
-                                    placeholder="Masukkan nama satuan" v-model="editingNama">
+                                    placeholder="cth: Meter" v-model="editingNama">
                             </div>
                         </div>
                         <div class="flex px-4 py-2 space-x-1 bg-neutral-100 dark:bg-slate-700">

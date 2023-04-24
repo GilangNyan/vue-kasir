@@ -26,6 +26,7 @@ export default {
         },
         cart: [],
         customer: [],
+        selectedCustomer: 0,
         qty: 1,
         cartQty: 0,
         cartDiskon: 0,
@@ -34,6 +35,7 @@ export default {
         editingId: null,
         editingNama: null,
         jmlbayar: 0,
+        catatan: '',
         message: null,
         modalActive: false,
         modalSuccessActive: false,
@@ -183,6 +185,24 @@ export default {
             this.editingId = null
             this.editingNama = null
         },
+        async transaksi() {
+            await axios.post("transaksi", {
+                user: this.authStore.user.id,
+                customer: this.selectedCustomer == 0 ? null : this.selectedCustomer,
+                diskonRp: this.totalDiskon,
+                diskonPersen: 0,
+                totalBruto: this.total(),
+                bayar: this.jmlbayar,
+                catatan: this.catatan
+            }).then((response) => {
+                this.modalConfirmActive = false
+                this.message = response.data.msg
+                this.modalSuccessActive = true
+                this.updateCart()
+                this.selectedCustomer = 0
+                this.jmlbayar = 0
+            }).catch((error) => console.log(error.response))
+        }
     },
     mounted() {
         this.updateCart()
@@ -272,7 +292,7 @@ export default {
                             </div>
                             <div>
                                 <label for="customer" class="text-neutral-600 dark:text-slate-400 mb-2">Customer</label>
-                                <select name="customer"
+                                <select name="customer" v-model="selectedCustomer"
                                     class="w-full border p-2 rounded-lg shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 invalid:text-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500 placeholder:text-neutral-400 dark:placeholder:text-slate-500">
                                     <option value="0">Pelanggan walk-in</option>
                                     <option :value="item.id" v-for="(item, index) in customer" :key="item.id">{{ item.nama }}</option>
@@ -386,14 +406,14 @@ export default {
                         </div>
                         <div class="space-y-2">
                             <label for="catatan" class="text-neutral-600 dark:text-slate-400 mb-2">Catatan</label>
-                            <textarea name="catatan" id="catatan" cols="4"
+                            <textarea name="catatan" id="catatan" cols="4" v-model="catatan"
                             class="w-full border p-2 rounded-lg shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 invalid:text-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500 placeholder:text-neutral-400 dark:placeholder:text-slate-500"></textarea>
                         </div>
                     </div>
                     <div class="shadow-lg px-4 py-2 border-t bg-neutral-100 dark:bg-slate-700 dark:border-slate-600 rounded-b-2xl">
                         <button class="px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white"
-                        :class="{ 'cursor-not-allowed bg-blue-200 hover:bg-blue-300' : jmlbayar < (total() - totalDiskon) }"
-                        :disabled="jmlbayar < (total() - totalDiskon)" @click="modalConfirmActive = true">
+                        :class="{ 'cursor-not-allowed bg-blue-200 hover:bg-blue-300' : (jmlbayar < (total() - totalDiskon)) || cart.length == 0 }"
+                        :disabled="(jmlbayar < (total() - totalDiskon)) || cart.length == 0" @click="modalConfirmActive = true">
                             Lanjutkan
                         </button>
                     </div>
@@ -438,7 +458,7 @@ export default {
                         <h1 class="text-2xl font-bold dark:text-slate-200 mb-2">Konfirmasi Transaksi</h1>
                         <span class="text-sm text-neutral-600 dark:text-slate-400 text-center mb-4">Apakah anda ingin menyelesaikan transaksi?</span>
                         <div class="flex items-center justify-center space-x-2">
-                            <button class="px-4 py-2 bg-blue-500 hover:bg-blue-400 rounded-lg text-white font-semibold" @click="removeCart()">Selesaikan Transaksi</button>
+                            <button class="px-4 py-2 bg-blue-500 hover:bg-blue-400 rounded-lg text-white font-semibold" @click="transaksi()">Selesaikan Transaksi</button>
                             <button class="px-4 py-2 bg-red-500 hover:bg-red-400 rounded-lg text-white font-semibold" @click="modalConfirmActive = false">Kembali</button>
                         </div>
                     </div>

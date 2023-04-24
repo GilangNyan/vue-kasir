@@ -27,6 +27,7 @@ import {
   faGear,
   faRightFromBracket,
   faUser,
+  faUsers,
   faRightLeft,
   faTrashAlt,
   faXmark,
@@ -40,7 +41,9 @@ import {
   faArrowUpShortWide,
   faArrowDownShortWide,
   faBox,
+  faBoxesStacked,
   faExclamation,
+  faTruck,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 
@@ -61,6 +64,7 @@ library.add(
   faGear,
   faRightFromBracket,
   faUser,
+  faUsers,
   faRightLeft,
   faTrashAlt,
   faXmark,
@@ -72,7 +76,9 @@ library.add(
   faArrowUpShortWide,
   faArrowDownShortWide,
   faBox,
-  faExclamation
+  faBoxesStacked,
+  faExclamation,
+  faTruck
 );
 
 // Axios

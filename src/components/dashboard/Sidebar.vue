@@ -24,7 +24,7 @@ export default {
             },
             {
                 type: "header",
-                label: "Manajemen Produk"
+                label: "Manajemen"
             },
             {
                 type: "nav",
@@ -37,6 +37,24 @@ export default {
                 label: "Produk",
                 route: "dashboard.produk",
                 icon: "fa-box"
+            },
+            {
+                type: "nav",
+                label: "Kelola Stok",
+                route: "dashboard.stok",
+                icon: "fa-boxes-stacked"
+            },
+            {
+                type: "nav",
+                label: "Customer",
+                route: "dashboard.customer",
+                icon: "fa-users"
+            },
+            {
+                type: "nav",
+                label: "Supplier",
+                route: "dashboard.supplier",
+                icon: "fa-truck"
             },
             {
                 type: "header",
