@@ -44,6 +44,10 @@ import {
   faBoxesStacked,
   faExclamation,
   faTruck,
+  faChartColumn,
+  faEye,
+  faPrint,
+  faFileExcel,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 
@@ -78,7 +82,11 @@ library.add(
   faBox,
   faBoxesStacked,
   faExclamation,
-  faTruck
+  faTruck,
+  faChartColumn,
+  faEye,
+  faPrint,
+  faFileExcel
 );
 
 // Axios

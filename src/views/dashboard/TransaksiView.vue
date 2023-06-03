@@ -32,13 +32,9 @@ export default {
                 <h1 class="text-2xl font-bold dark:text-slate-200">Transaksi</h1>
                 <TopBar />
             </div>
-            <div class="flex flex-col mt-8 lg:flex-row w-full space-y-4 lg:space-x-4 lg:space-y-0">
-                <!-- Left Content -->
-                <div class="w-full lg:w-2/3 shadow-lg bg-white dark:bg-slate-800 rounded-2xl p-4 space-y-4">
-                    <!--  -->
-                </div>
-                <!-- Right Content -->
-                <div class="w-full lg:w-1/3 shadow-lg bg-white dark:bg-slate-800 rounded-2xl p-4 space-y-4">
+            <div class="flex flex-col mt-8 lg:flex-row w-full space-y-4">
+                <!-- Content -->
+                <div class="w-full shadow-lg bg-white dark:bg-slate-800 rounded-2xl p-4 space-y-4">
                     <!--  -->
                 </div>
             </div>

@@ -57,14 +57,20 @@ export default {
                 icon: "fa-truck"
             },
             {
+                type: "nav",
+                label: "Transaksi",
+                route: "dashboard.transaksi",
+                icon: "fa-right-left"
+            },
+            {
                 type: "header",
                 label: "Laporan"
             },
             {
                 type: "nav",
-                label: "Transaksi",
-                route: "dashboard.transaksi",
-                icon: "fa-right-left"
+                label: "Laporan Penjualan",
+                route: "dashboard.laporan",
+                icon: "fa-chart-column"
             },
             {
                 type: "header",

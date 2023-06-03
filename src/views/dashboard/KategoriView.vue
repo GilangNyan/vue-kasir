@@ -182,11 +182,15 @@ export default {
                                     <td class="p-3 text-sm text-neutral-700 dark:text-slate-300">{{ (tableConfig.limit * (tableConfig.activePage - 1)) + index + 1 }}</td>
                                     <td class="p-3 text-sm text-neutral-700 dark:text-slate-300">{{ item.nama }}</td>
                                     <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 space-x-1">
-                                        <button class="rounded bg-blue-500 hover:bg-blue-400 px-2 py-1" @click="getEditData(item.id)">
+                                        <button class="rounded bg-blue-500 hover:bg-blue-400 px-2 py-1 group relative" @click="getEditData(item.id)">
                                             <font-awesome-icon icon="fa-solid fa-pen" class="text-white" />
+                                            <span class="absolute hidden group-hover:block transition-all bg-gray-700 text-white text-sm px-3 py-2 -top-1 right-10 w-max rounded-md
+                                            after:content-[''] after:absolute after:top-1/2 after:left-[100%] after:-translate-y-1/2 after:border-8 after:border-y-transparent after:border-r-transparent after:border-l-gray-700 after:transition-all">Ubah</span>
                                         </button>
-                                        <button class="rounded bg-red-500 hover:bg-red-400 px-2 py-1" @click="triggerModalHapus(item.id)">
+                                        <button class="rounded bg-red-500 hover:bg-red-400 px-2 py-1 group relative" @click="triggerModalHapus(item.id)">
                                             <font-awesome-icon icon="fa-solid fa-trash-alt" class="text-white" />
+                                            <span class="absolute hidden group-hover:block transition-all bg-gray-700 text-white text-sm px-3 py-2 -top-1 right-10 w-max rounded-md
+                                            after:content-[''] after:absolute after:top-1/2 after:left-[100%] after:-translate-y-1/2 after:border-8 after:border-y-transparent after:border-r-transparent after:border-l-gray-700 after:transition-all">Hapus</span>
                                         </button>
                                     </td>
                                 </tr>
@@ -215,13 +219,13 @@ export default {
                             </div>
                         </div>
                         <div class="flex px-4 py-2 space-x-1 bg-neutral-100 dark:bg-slate-700">
-                            <button type="button" v-if="editingId != null" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg" @click="ubah()">
+                            <button type="button" v-if="editingId != null" class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600" @click="ubah()">
                                 Ubah Kategori
                             </button>
-                            <button type="button" v-else class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg" @click="tambah()">
+                            <button type="button" v-else class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600" @click="tambah()">
                                 Tambah Kategori
                             </button>
-                            <button type="button" class="bg-red-500 text-white font-semibold px-4 py-2 rounded-lg" @click="reset()">
+                            <button type="button" class="bg-red-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-red-600" @click="reset()">
                                 Reset
                             </button>
                         </div>

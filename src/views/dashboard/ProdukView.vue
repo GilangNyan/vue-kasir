@@ -3,6 +3,7 @@ import axios from 'axios';
 import Sidebar from '../../components/dashboard/Sidebar.vue';
 import TopBar from '../../components/dashboard/Topbar.vue';
 import Pagination from '../../components/dashboard/Pagination.vue';
+import Modal from '../../components/dashboard/Modal.vue';
 
 export default {
     setup() {
@@ -11,6 +12,8 @@ export default {
     data: () => ({
         sidebarMinimized: false,
         produk: [],
+        kategori: [],
+        satuan: [],
         tableConfig: {
             orderBy: "barcode",
             orderDir: "ASC",
@@ -20,10 +23,21 @@ export default {
             limit: 10,
             activePage: 1,
             search: ''
-        }
+        },
+        editMode: false,
+        editingBarcode: null,
+        editingNama: null,
+        editingBeli: null,
+        editingJual: null,
+        editingStok: null,
+        selectedKategori: 0,
+        selectedSatuan: 0,
+        message: null,
+        modalActive: false,
+        modalSuccessActive: false
     }),
     components: {
-        Sidebar, TopBar, Pagination
+        Sidebar, TopBar, Pagination, Modal
     },
     methods: {
         checkSidebarSize(val) {
@@ -59,10 +73,102 @@ export default {
         onPageChange(page) {
             this.tableConfig.activePage = page
             this.updateTable()
+        },
+        setKategori(data){
+            this.kategori = data
+        },
+        async populateKategori(){
+            await axios.get("kategoriall").then((response) => this.setKategori(response.data)).catch((error) => console.log(error.response))
+        },
+        setSatuan(data){
+            this.satuan = data
+        },
+        async populateSatuan(){
+            await axios.get("satuanall").then((response) => this.setSatuan(response.data)).catch((error) => console.log(error.response))
+        },
+        async getEditData(barcode){
+            this.editMode = true
+            this.editingBarcode = barcode
+            document.getElementById('kategori').focus()
+            await axios.get(`produk/${barcode}`).then((response) => {
+                this.editingNama = response.data.nama
+                this.editingBeli = response.data.satuans[0].produk_satuan.hargaBeli
+                this.editingJual = response.data.satuans[0].produk_satuan.hargaJual
+                this.editingStok = response.data.satuans[0].produk_satuan.stok
+                this.selectedKategori = response.data.kategori.id
+                this.selectedSatuan = response.data.satuans[0].produk_satuan.satuanId
+            }).catch((error) => console.log(error.response))
+        },
+        reset(){
+            this.editMode = false
+            this.editingBarcode = null
+            this.editingNama = null
+            this.editingBeli = null
+            this.editingJual = null
+            this.editingStok = null
+            this.selectedKategori = 0
+            this.selectedSatuan = 0
+        },
+        async tambah(){
+            try {
+                const response = await axios.post('produk', {
+                    barcode: this.editingBarcode,
+                    nama: this.editingNama,
+                    kategori: this.selectedKategori,
+                    satuan: this.selectedSatuan,
+                    beli: this.editingBeli,
+                    jual: this.editingJual,
+                    stok: this.editingStok
+                })
+                this.message = response.data.msg
+                this.modalSuccessActive = true
+                this.reset()
+                this.updateTable()
+            } catch (error) {
+                this.message = error.response.data.msg
+            }
+        },
+        async ubah(){
+            try {
+                const response = await axios.patch(`produk/${this.editingBarcode}`, {
+                    nama: this.editingNama
+                })
+                this.message = response.data.msg
+                this.modalSuccessActive = true
+                this.editMode = false
+                this.reset()
+                this.updateTable()
+            } catch (error) {
+                this.message = error.response.data.msg
+            }
+        },
+        async hapus(){
+            try {
+                const response = await axios.delete(`produk/${this.editingBarcode}`)
+                this.message = response.data.msg
+                this.modalSuccessActive = true
+                this.modalActive = false
+                this.editMode = false
+                this.reset()
+                this.updateTable()
+            } catch (error) {
+                this.message = error.response.data.msg
+            }
+        },
+        triggerModalHapus(barcode){
+            this.editMode = true
+            this.getEditData(barcode)
+            this.modalActive = true
+        },
+        batal(){
+            this.modalActive = false
+            this.reset()
         }
     },
     mounted() {
         this.updateTable()
+        this.populateKategori()
+        this.populateSatuan()
     }
 }
 </script>
@@ -187,11 +293,15 @@ export default {
                                     <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ item.satuans[0].produk_satuan.hargaJual }}</td>
                                     <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-center">{{ item.satuans[0].produk_satuan.stok }}</td>
                                     <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 space-x-1">
-                                        <button class="rounded bg-blue-500 hover:bg-blue-400 px-2 py-1">
+                                        <button class="rounded bg-blue-500 hover:bg-blue-400 px-2 py-1 group relative" @click="getEditData(item.barcode)">
                                             <font-awesome-icon icon="fa-solid fa-pen" class="text-white" />
+                                            <span class="absolute hidden group-hover:block transition-all bg-gray-700 text-white text-sm px-3 py-2 -top-1 right-10 w-max rounded-md
+                                            after:content-[''] after:absolute after:top-1/2 after:left-[100%] after:-translate-y-1/2 after:border-8 after:border-y-transparent after:border-r-transparent after:border-l-gray-700 after:transition-all">Ubah</span>
                                         </button>
-                                        <button class="rounded bg-red-500 hover:bg-red-400 px-2 py-1">
+                                        <button class="rounded bg-red-500 hover:bg-red-400 px-2 py-1 group relative" @click="triggerModalHapus(item.barcode)">
                                             <font-awesome-icon icon="fa-solid fa-trash-alt" class="text-white" />
+                                            <span class="absolute hidden group-hover:block transition-all bg-gray-700 text-white text-sm px-3 py-2 -top-1 right-10 w-max rounded-md
+                                            after:content-[''] after:absolute after:top-1/2 after:left-[100%] after:-translate-y-1/2 after:border-8 after:border-y-transparent after:border-r-transparent after:border-l-gray-700 after:transition-all">Hapus</span>
                                         </button>
                                     </td>
                                 </tr>
@@ -210,22 +320,24 @@ export default {
                 <div class="w-full lg:w-1/3 space-y-4">
                     <div class="bg-white dark:bg-slate-800 shadow-lg rounded-2xl overflow-hidden">
                         <div class="p-4 border-b dark:border-slate-600 flex items-center">
-                            <h2 class="text-lg font-bold text-neutral-700 dark:text-slate-200">{{ editingId != null ? 'Ubah' : 'Tambah'
+                            <h2 class="text-lg font-bold text-neutral-700 dark:text-slate-200">{{ editingBarcode != null ? 'Ubah' : 'Tambah'
                             }} Data Produk
                             </h2>
                         </div>
                         <div class="p-4 space-y-2">
                             <div class="space-y-2">
                                 <label for="kategori" class="text-neutral-600 dark:text-slate-400">Kategori Produk</label>
-                                <select name="kategori" id="kategori"
+                                <select name="kategori" id="kategori" v-model="selectedKategori"
                                     class="w-full border p-2 rounded-lg shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 invalid:text-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500 placeholder:text-neutral-400 dark:placeholder:text-slate-500">
-                                    <option value="1">Kategori</option>
+                                    <option value="0">Pilih Kategori</option>
+                                    <option :value="item.id" v-for="(item, index) in kategori" :key="item.id">{{ item.nama }}</option>
                                 </select>
                             </div>
                             <div class="space-y-2">
                                 <label for="barcode" class="text-neutral-600 dark:text-slate-400">Nomor Barcode</label>
-                                <input type="text" id="barcode" required
-                                    class="w-full border p-2 rounded-lg shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 invalid:text-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500 placeholder:text-neutral-400 dark:placeholder:text-slate-500"
+                                <input type="text" id="barcode" required :disabled="editMode"
+                                    class="w-full border p-2 rounded-lg shadow-sm dark:border-slate-600 dark:text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 invalid:text-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500 placeholder:text-neutral-400 dark:placeholder:text-slate-500"
+                                    :class="editMode ? 'bg-neutral-100 dark:bg-slate-700' : 'dark:bg-slate-800'"
                                     placeholder="cth: 0150004" v-model="editingBarcode">
                             </div>
                             <div class="space-y-2">
@@ -236,9 +348,10 @@ export default {
                             </div>
                             <div class="space-y-2">
                                 <label for="satuan" class="text-neutral-600 dark:text-slate-400">Satuan Produk</label>
-                                <select name="satuan" id="satuan"
+                                <select name="satuan" id="satuan" v-model="selectedSatuan"
                                     class="w-full border p-2 rounded-lg shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 invalid:text-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500 placeholder:text-neutral-400 dark:placeholder:text-slate-500">
-                                    <option value="1">Satuan</option>
+                                    <option value="0">Pilih Satuan</option>
+                                    <option :value="item.id" v-for="(item, index) in satuan" :key="item.id">{{ item.nama }}</option>
                                 </select>
                             </div>
                             <div class="space-y-2">
@@ -261,15 +374,15 @@ export default {
                             </div>
                         </div>
                         <div class="flex px-4 py-2 space-x-1 bg-neutral-100 dark:bg-slate-700">
-                            <button type="button" v-if="editingId != null"
-                                class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg" @click="ubah()">
+                            <button type="button" v-if="editMode != false"
+                                class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600" @click="ubah()">
                                 Ubah Produk
                             </button>
-                            <button type="button" v-else class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg"
+                            <button type="button" v-else class="bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600"
                                 @click="tambah()">
                                 Tambah Produk
                             </button>
-                            <button type="button" class="bg-red-500 text-white font-semibold px-4 py-2 rounded-lg" @click="reset()">
+                            <button type="button" class="bg-red-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-red-600" @click="reset()">
                                 Reset
                             </button>
                         </div>
@@ -277,5 +390,40 @@ export default {
                 </div>
             </div>
         </main>
+
+        <!-- Modal -->
+        <div class="relative">
+            <Teleport to="body">
+                <Modal :modalActive="modalActive">
+                    <div class="w-20 h-20 z-30 m-4 rounded-full border-4 border-yellow-500 flex items-center justify-center">
+                        <font-awesome-icon icon="fa-solid fa-exclamation" class="text-5xl text-yellow-500" />
+                    </div>
+                    <div class="flex flex-col items-center justify-center">
+                        <h1 class="text-2xl font-bold dark:text-slate-200 mb-2">Konfirmasi Penghapusan</h1>
+                        <span class="text-sm text-neutral-600 dark:text-slate-400 text-center mb-4">Apakah anda yakin ingin
+                            menghapus <b>{{ this.editingNama }}</b> dengan barcode <b>{{ this.editingBarcode }}</b>?</span>
+                        <div class="flex items-center justify-center space-x-2">
+                            <button class="px-4 py-2 bg-blue-500 hover:bg-blue-400 rounded-lg text-white font-semibold"
+                                @click="hapus()">Ya, hapus</button>
+                            <button class="px-4 py-2 bg-red-500 hover:bg-red-400 rounded-lg text-white font-semibold"
+                                @click="batal()">Batal</button>
+                        </div>
+                    </div>
+                </Modal>
+                <Modal :modalActive="modalSuccessActive">
+                    <div class="w-20 h-20 z-30 m-4 rounded-full border-4 border-green-500 flex items-center justify-center">
+                        <font-awesome-icon icon="fa-solid fa-check" class="text-5xl text-green-500" />
+                    </div>
+                    <div class="flex flex-col items-center justify-center">
+                        <h1 class="text-2xl font-bold dark:text-slate-200 mb-2">Berhasil</h1>
+                        <span class="text-sm text-neutral-600 dark:text-slate-400 text-center mb-4">{{ message }}</span>
+                        <div class="flex items-center justify-center space-x-2">
+                            <button class="px-4 py-2 bg-blue-500 hover:bg-blue-400 rounded-lg text-white font-semibold"
+                                @click="modalSuccessActive = false">Tutup</button>
+                        </div>
+                    </div>
+                </Modal>
+            </Teleport>
+        </div>
     </div>
 </template>
