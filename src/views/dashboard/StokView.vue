@@ -514,7 +514,7 @@ export default {
                             </table>
                         </div>
                         <Pagination :total-pages="produkTableConfig.totalPages" :per-page="parseInt(produkTableConfig.limit)" :current-page="produkTableConfig.activePage"
-                            :total-items="produkTableConfig.totalRows" @pagechanged="onPageChange" />
+                            :total-items="produkTableConfig.totalRows" @pagechanged="onProdukPageChange" />
                     </div>
                 </BigModal>
             </Teleport>

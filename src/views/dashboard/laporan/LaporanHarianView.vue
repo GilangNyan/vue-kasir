@@ -68,6 +68,9 @@ export default {
             this.maxTanggal = `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`
             this.editingTanggal = this.maxTanggal
             this.updateTable()
+        },
+        formatRibuan(angka) {
+            return Number(angka).toLocaleString()
         }
     },
     mounted() {
@@ -137,11 +140,11 @@ export default {
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300">{{ (tableConfig.limit * (tableConfig.activePage - 1)) + index + 1 }}</td>
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300">{{ item.faktur }}</td>
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300">{{ item.customer != null ? item.customer.nama : '-' }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ item.modal }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ item.jual }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ item.diskonRp }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ item.total }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ item.total - item.modal }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ formatRibuan(item.modal) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ formatRibuan(item.jual) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ formatRibuan(item.diskonRp) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ formatRibuan(item.total) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ formatRibuan(item.total - item.modal) }}</td>
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300">{{ item.user.fullname }}</td>
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 space-x-1">
                             <button class="rounded bg-cyan-500 hover:bg-cyan-400 px-2 py-1 group relative">
@@ -163,12 +166,12 @@ export default {
                 <tfoot class="border-t-2 bg-neutral-100 dark:bg-slate-700 dark:border-slate-600">
                     <tr v-if="transaksi.length != 0">
                         <td colspan="2" class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Jumlah</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 font-semibold">{{ tableConfig.totalRows }} faktur</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ totalledValue.jual }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ totalledValue.modal }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ totalledValue.diskonRp }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ totalledValue.total }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ totalledValue.total - totalledValue.modal }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 font-semibold">{{ formatRibuan(tableConfig.totalRows) }} faktur</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.jual) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.modal) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.diskonRp) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.total) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.total - totalledValue.modal) }}</td>
                         <td colspan="2" class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold"></td>
                     </tr>
                 </tfoot>

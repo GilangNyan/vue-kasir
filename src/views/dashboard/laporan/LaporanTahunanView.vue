@@ -68,6 +68,13 @@ export default {
         },
         setCurrentYear() {
             this.selectedTahun = new Date().getFullYear()
+        },
+        getNamaBulan(nomorBulan) {
+            const namaBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
+            return namaBulan[nomorBulan - 1]
+        },
+        formatRibuan(angka) {
+            return Number(angka).toLocaleString()
         }
     },
     mounted() {
@@ -137,13 +144,13 @@ export default {
                 <tbody class="divide-y divide-neutral-100 dark:divide-slate-600">
                     <tr v-if="transaksi.length != 0" v-for="(item, index) in transaksi">
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300">{{ (tableConfig.limit * (tableConfig.activePage - 1)) + index + 1 }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-center">{{ item.bulan }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">{{ item.jumlahFaktur }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ item.modal }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ item.penjualan }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ item.diskonRp }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ item.subtotal }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ item.subtotal - item.diskonRp }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-center">{{ getNamaBulan(item.bulan) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">{{ formatRibuan(item.jumlahFaktur) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ formatRibuan(item.modal) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ formatRibuan(item.penjualan) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ formatRibuan(item.diskonRp) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ formatRibuan(item.subtotal) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ formatRibuan(item.subtotal - item.diskonRp) }}</td>
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 space-x-1">
                             <button class="rounded bg-cyan-500 hover:bg-cyan-400 px-2 py-1 group relative">
                                 <font-awesome-icon icon="fa-solid fa-eye" class="text-white" />
@@ -159,12 +166,12 @@ export default {
                 <tfoot class="border-t-2 bg-neutral-100 dark:bg-slate-700 dark:border-slate-600">
                     <tr v-if="transaksi.length != 0">
                         <td colspan="2" class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Jumlah</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">{{ totalledValue.faktur }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ totalledValue.modal }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ totalledValue.jual }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ totalledValue.diskonRp }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ totalledValue.total }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ totalledValue.total - totalledValue.diskonRp }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">{{ formatRibuan(totalledValue.faktur) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.modal) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.jual) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.diskonRp) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.total) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.total - totalledValue.diskonRp) }}</td>
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold"></td>
                     </tr>
                 </tfoot>

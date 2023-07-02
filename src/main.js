@@ -48,6 +48,7 @@ import {
   faEye,
   faPrint,
   faFileExcel,
+  faBan,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 
@@ -86,7 +87,8 @@ library.add(
   faChartColumn,
   faEye,
   faPrint,
-  faFileExcel
+  faFileExcel,
+  faBan
 );
 
 // Axios

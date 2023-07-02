@@ -131,7 +131,12 @@ export default {
         async ubah(){
             try {
                 const response = await axios.patch(`produk/${this.editingBarcode}`, {
-                    nama: this.editingNama
+                    nama: this.editingNama,
+                    kategori: this.selectedKategori,
+                    satuan: this.selectedSatuan,
+                    beli: this.editingBeli,
+                    jual: this.editingJual,
+                    stok: this.editingStok
                 })
                 this.message = response.data.msg
                 this.modalSuccessActive = true

@@ -84,6 +84,16 @@ const router = createRouter({
       name: "dashboard.laporan",
       component: () => import("../views/dashboard/LaporanView.vue"),
     },
+    {
+      path: "/laporan/produk",
+      name: "dashboard.lapproduk",
+      component: () => import("../views/dashboard/LaporanProdukView.vue"),
+    },
+    {
+      path: "/forecast",
+      name: "dashboard.forecast",
+      component: () => import("../views/dashboard/ForecastingView.vue"),
+    },
   ],
 });
 

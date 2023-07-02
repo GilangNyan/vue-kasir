@@ -36,6 +36,8 @@ export default {
         editingNama: null,
         jmlbayar: 0,
         catatan: '',
+        selectedTanggal: null,
+        maxTanggal: null,
         message: null,
         modalActive: false,
         modalSuccessActive: false,
@@ -193,7 +195,8 @@ export default {
                 diskonPersen: 0,
                 totalBruto: this.total(),
                 bayar: this.jmlbayar,
-                catatan: this.catatan
+                catatan: this.catatan,
+                tanggalTransaksi: this.selectedTanggal
             }).then((response) => {
                 this.modalConfirmActive = false
                 this.message = response.data.msg
@@ -202,11 +205,14 @@ export default {
                 this.selectedCustomer = 0
                 this.jmlbayar = 0
             }).catch((error) => console.log(error.response))
-        }
+        },
     },
     mounted() {
         this.updateCart()
         this.updateCustomer()
+        const today = new Date().toISOString().split('T')[0]
+        this.maxTanggal = today
+        this.selectedTanggal = today
     }
 }
 </script>
@@ -263,8 +269,16 @@ export default {
                                     item.satuans[0].produk_satuan.hargaJual
                                     }}</td>
                                 <td class="p-3 text-sm text-neutral-700 dark:text-slate-300">
-                                    <button class="rounded bg-green-500 hover:bg-green-400 px-1" @click="addToCart(item.barcode)">
-                                        <font-awesome-icon icon="fa-solid fa-check" class="text-white" />
+                                    <button class="rounded group relative"
+                                    :class="item.satuans[0].produk_satuan.stok < qty || item.satuans[0].produk_satuan.stok === 0 ? 'bg-red-500 hover:bg-red-400 px-1 cursor-not-allowed' : 'bg-green-500 hover:bg-green-400 px-1'"
+                                    @click="addToCart(item.barcode)"
+                                    :disabled="item.satuans[0].produk_satuan.stok < qty || item.satuans[0].produk_satuan.stok === 0">
+                                        <font-awesome-icon icon="fa-solid fa-ban" class="text-white" v-if="item.satuans[0].produk_satuan.stok < qty || item.satuans[0].produk_satuan.stok === 0" />
+                                        <font-awesome-icon icon="fa-solid fa-check" class="text-white" v-else />
+                                        <span class="absolute hidden group-hover:block transition-all bg-gray-700 text-white text-sm px-3 py-2 -top-1 right-10 w-max rounded-md
+                                            after:content-[''] after:absolute after:top-1/2 after:left-[100%] after:-translate-y-1/2 after:border-8 after:border-y-transparent after:border-r-transparent after:border-l-gray-700 after:transition-all">
+                                            {{ item.satuans[0].produk_satuan.stok < qty || item.satuans[0].produk_satuan.stok === 0 ? 'Stok Tidak Mencukupi' : 'Tambah ke Cart' }}
+                                        </span>
                                     </button>
                                 </td>
                             </tr>
@@ -286,7 +300,7 @@ export default {
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label for="tanggal" class="text-neutral-600 dark:text-slate-400 mb-2">Tanggal</label>
-                                <input type="text" name="tanggal"
+                                <input type="date" name="tanggal" :max="maxTanggal" v-model="selectedTanggal"
                                     class="w-full border p-2 rounded-lg shadow-sm dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 invalid:text-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500 placeholder:text-neutral-400 dark:placeholder:text-slate-500"
                                     placeholder="Tanggal">
                             </div>

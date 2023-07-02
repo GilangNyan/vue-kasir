@@ -68,8 +68,20 @@ export default {
             },
             {
                 type: "nav",
-                label: "Laporan Penjualan",
+                label: "Penjualan",
                 route: "dashboard.laporan",
+                icon: "fa-chart-column"
+            },
+            {
+                type: "nav",
+                label: "Per Produk",
+                route: "dashboard.lapproduk",
+                icon: "fa-chart-column"
+            },
+            {
+                type: "nav",
+                label: "Forecast",
+                route: "dashboard.forecast",
                 icon: "fa-chart-column"
             },
             {
