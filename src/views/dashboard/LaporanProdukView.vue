@@ -96,6 +96,10 @@ export default {
             this.tableConfig.activePage = page
             this.updateTable()
         },
+        onProdukPageChange(page) {
+            this.produkTableConfig.activePage = page
+            this.updateProdukTable()
+        },
         formatRibuan(angka) {
             return Number(angka).toLocaleString()
         },
@@ -237,7 +241,7 @@ export default {
                     </div>
                     <div class="flex flex-col items-center justify-center">
                         <h1 class="text-2xl font-bold dark:text-slate-200 mb-2">Konfirmasi Penghapusan</h1>
-                        <span class="text-sm text-neutral-600 dark:text-slate-400 text-center mb-4">Apakah anda yakin ingin menghapus <b>{{ this.editingNama }}</b> dengan ID <b>{{ this.editingId }}</b>?</span>
+                        <span class="text-sm text-neutral-600 dark:text-slate-400 text-center mb-4">Apakah anda yakin ingin menghapus <b></b> dengan ID <b></b>?</span>
                         <div class="flex items-center justify-center space-x-2">
                             <button class="px-4 py-2 bg-blue-500 hover:bg-blue-400 rounded-lg text-white font-semibold" @click="hapus()">Ya, hapus</button>
                             <button class="px-4 py-2 bg-red-500 hover:bg-red-400 rounded-lg text-white font-semibold" @click="batal()">Batal</button>
