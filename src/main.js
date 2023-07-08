@@ -49,6 +49,11 @@ import {
   faPrint,
   faFileExcel,
   faBan,
+  faMoneyBillTrendUp,
+  faCoins,
+  faArrowTrendUp,
+  faArrowTrendDown,
+  faEllipsis,
 } from "@fortawesome/free-solid-svg-icons";
 import { faBell } from "@fortawesome/free-regular-svg-icons";
 
@@ -88,7 +93,12 @@ library.add(
   faEye,
   faPrint,
   faFileExcel,
-  faBan
+  faBan,
+  faMoneyBillTrendUp,
+  faCoins,
+  faArrowTrendUp,
+  faArrowTrendDown,
+  faEllipsis
 );
 
 // Axios

@@ -150,7 +150,7 @@ export default {
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ formatRibuan(item.penjualan) }}</td>
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ formatRibuan(item.diskonRp) }}</td>
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ formatRibuan(item.subtotal) }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ formatRibuan(item.subtotal - item.diskonRp) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right">Rp. {{ formatRibuan(item.subtotal - item.modal) }}</td>
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 space-x-1">
                             <button class="rounded bg-cyan-500 hover:bg-cyan-400 px-2 py-1 group relative">
                                 <font-awesome-icon icon="fa-solid fa-eye" class="text-white" />
