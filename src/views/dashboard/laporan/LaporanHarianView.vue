@@ -167,8 +167,8 @@ export default {
                     <tr v-if="transaksi.length != 0">
                         <td colspan="2" class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Jumlah</td>
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 font-semibold">{{ formatRibuan(tableConfig.totalRows) }} faktur</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.jual) }}</td>
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.modal) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.jual) }}</td>
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.diskonRp) }}</td>
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.total) }}</td>
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.total - totalledValue.modal) }}</td>

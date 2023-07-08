@@ -171,7 +171,7 @@ export default {
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.jual) }}</td>
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.diskonRp) }}</td>
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.total) }}</td>
-                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.total - totalledValue.diskonRp) }}</td>
+                        <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold">Rp. {{ formatRibuan(totalledValue.total - totalledValue.modal) }}</td>
                         <td class="p-3 text-sm text-neutral-700 dark:text-slate-300 text-right font-semibold"></td>
                     </tr>
                 </tfoot>
