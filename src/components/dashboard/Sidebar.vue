@@ -85,6 +85,12 @@ export default {
                 icon: "fa-chart-column"
             },
             {
+                type: "nav",
+                label: "Rekap Forecast",
+                route: "dashboard.rekapforecast",
+                icon: "fa-chart-column"
+            },
+            {
                 type: "header",
                 label: "Pengaturan"
             },

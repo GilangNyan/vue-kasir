@@ -16,6 +16,7 @@ export default {
         dataPenjualan: [],
         dataPeramalan: [],
         dataEvaluasi: null,
+        dataHasil: null,
         produk: [],
         produkTableConfig: {
             orderBy: "barcode",
@@ -31,6 +32,8 @@ export default {
         selectedPeriode: 3,
         selectedProduk: null,
         produkNama: null,
+        produkSatuan: null,
+        produkSatuanId: null,
         message: null,
         modalActive: false,
         modalSuccessActive: false,
@@ -53,6 +56,8 @@ export default {
         setDataPenjualan(data) {
             this.dataPenjualan = data.result
             this.dataEvaluasi = data.evaluasi
+            this.dataHasil = data.result[data.result.length - 1]
+            this.simpanForecast(this.dataHasil)
             // Set Data Chart
             const chartLabel = data.result.map(bulan => {
                 return `${this.getNamaBulan(bulan.bulan) + ' ' + bulan.tahun}`
@@ -128,6 +133,8 @@ export default {
             await axios.get(`produk/${barcode}`).then((response) => {
                 this.selectedProduk = response.data.barcode
                 this.produkNama = response.data.nama
+                this.produkSatuan = response.data.satuans[0].nama
+                this.produkSatuanId = response.data.satuans[0].id
                 this.bigModalActive = false
             }).catch((error) => console.log(error.response))
         },
@@ -140,9 +147,22 @@ export default {
             const namaBulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']
             return namaBulan[nomorBulan - 1]
         },
+        async simpanForecast(data) {
+            const tanggal = new Date()
+            tanggal.setDate(1)
+            const bulanDepan = tanggal.setMonth(tanggal.getMonth() + 1)
+            await axios.post("simpanForecast", {
+                periode: bulanDepan,
+                barcode: this.selectedProduk,
+                satuan: this.produkSatuanId,
+                nilai: data.forecast
+            }).then((response) => {
+                // 
+            }).catch((error) => console.log(error.response))
+        }
     },
     mounted() {
-        this.updateTable()
+        // this.updateTable()
         this.populatePeriode()
     }
 }
@@ -197,10 +217,14 @@ export default {
                             </button>
                         </div>
                         <h2 class="text-xl font-bold dark:text-slate-200">Forecast Produk</h2>
-                        <LineChart v-if="chartData != null" :chartData="chartData" :options="chartOptions" />
+                        <LineChart v-if="dataPenjualan.length != 0 && chartData != null" :chartData="chartData" :options="chartOptions" />
                     </div>
-                    <!-- Tabel -->
-                    <div class="overflow-auto rounded-lg shadow">
+                    <!-- Hasil Peramalan -->
+                    <p class="w-full p-4 bg-neutral-100 dark:bg-slate-700 border rounded-lg dark:border-slate-600 text-neutral-700 dark:text-slate-300 space-x-2" v-if="dataPenjualan.length != 0">
+                        Prediksi penjualan produk <b>"{{ produkNama }}"</b> pada periode<b>{{ getNamaBulan(dataHasil.bulan) + ' ' + dataHasil.tahun }}</b> sebesar<b>{{ dataHasil.forecast + ' ' + produkSatuan }}</b>
+                    </p>
+                    <!-- Tabel Error -->
+                    <div class="overflow-auto rounded-lg shadow" v-if="dataPenjualan.length != 0">
                         <table class="table-auto w-full">
                             <thead class="border-b-2 bg-neutral-100 dark:bg-slate-700 dark:border-slate-600">
                                 <tr>

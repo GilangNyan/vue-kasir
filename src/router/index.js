@@ -94,6 +94,11 @@ const router = createRouter({
       name: "dashboard.forecast",
       component: () => import("../views/dashboard/ForecastingView.vue"),
     },
+    {
+      path: "/forecast/rekap",
+      name: "dashboard.rekapforecast",
+      component: () => import("../views/dashboard/RekapForecastView.vue"),
+    },
   ],
 });
 

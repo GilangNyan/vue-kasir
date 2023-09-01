@@ -1,18 +1,20 @@
 <script>
 import { useSidebarStore } from '../../stores/sidebar'
+import { useAuthStore } from '../../stores/auth'
 import { useDark, useToggle } from '@vueuse/core'
 import NotificationsDropdown from './dropdown/NotificationsDropdown.vue'
 
 export default {
     setup() {
         const sidebar = useSidebarStore()
+        const authStore = useAuthStore()
         const isDark = useDark()
         const toggleDark = useToggle(isDark)
 
         const switcher = () => sidebar.switcher()
 
         return {
-            sidebar, isDark, toggleDark, switcher
+            sidebar, isDark, toggleDark, switcher, authStore
         }
     },
     methods: {
@@ -55,10 +57,10 @@ export default {
             <!-- User Greeting -->
             <div class="flex text-right items-center space-x-4">
                 <div class="hidden lg:block">
-                    <p class="dark:text-slate-200">Halo, <b>John Doe</b></p>
-                    <small class="text-xs text-neutral-400 dark:text-slate-400">Admin</small>
+                    <p class="dark:text-slate-200">Halo, <b>{{ authStore.user.fullname }}</b></p>
+                    <small class="text-xs text-neutral-400 dark:text-slate-400">{{ authStore.user.email }}</small>
                 </div>
-                <img src="@/assets/images/user.jpg" alt="Profile Photo" class="h-10 rounded-full">
+                <img src="@/assets/images/default.png" alt="Profile Photo" class="h-10 rounded-full">
             </div>
         </div>
     </div>
